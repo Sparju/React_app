@@ -1,0 +1,47 @@
+{
+  "name": "finalproject",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+    "scripts": {
+      "dev": "concurrently \"npm run server\" \"npm run dbjson\" \"vite\"",
+      "server": "json-server --watch db.json --port 5000",
+      "dbjson": "dbjson --watch",
+      "vite": "vite",
+      "build": "vite build",
+      "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+      "preview": "vite preview"
+    },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/lab": "^6.0.0-beta.14",
+    "@mui/material": "^6.1.6",
+    "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
+    "formik": "^2.4.5",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.2",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.27.0",
+    "recharts": "^2.13.2",
+    "redux": "^5.0.1",
+    "sass": "^1.84.0",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^9.1.2",
+    "dbjson": "^1.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "json-server": "^1.0.0-beta.3",
+    "vite": "^5.2.0"
+  }
+}
