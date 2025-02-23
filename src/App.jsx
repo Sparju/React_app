@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import MainUi from './components/interface/MainUi';
 import RouterConfig from './Router';
 import { login, logout } from './services/Action.js/ActionIndex';
 import './Style.scss';
@@ -10,6 +9,7 @@ import Footer from './components/Footer';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ReactUI from './components/interface/MainUi';
 
 
 const App = () => {
@@ -45,18 +45,15 @@ const App = () => {
     <Container className='mainpage'>
               <ThemeProvider theme={theme}>
       <Row className='fixedHeader' >
-        {isLoggedIn && <MainUi />}
+          <ReactUI/>
       </Row>
-      <body id='bdy'>
+
+        <Row >
         <RouterConfig />
-      </body>
 
-
-      {isLoggedIn &&
-        <Row className='Footer'>
           <Footer />
         </Row>
-      }
+      
       </ThemeProvider>
     </Container>
   );

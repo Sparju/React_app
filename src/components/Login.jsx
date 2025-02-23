@@ -1,152 +1,102 @@
-import { useFormik } from "formik";
-import { Col, Row } from "react-bootstrap";
-import * as Yup from "yup";
-import "./StyleSheets/login.css";
-import StudentServices from "../services/StudentServices";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
-import MainPage from "./interface/interface";
-import Images from "../images/image";
-import Token from "../common/Token";
-import { login } from "../services/Action.js/ActionIndex";
-import { useDispatch } from "react-redux";
-import { Box, Button, Grid, TextField, InputAdornment, IconButton, Alert } from "@mui/material";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import PasswordInput from "../../GlobalComponents/Password";
 
-const Login = () => {
-    const [alert, setAlert] = useState({ loferr: false, logsucc: false });
-    const [data1, setData1] = useState([]);
-    const [showPassword, setShowPassword] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate(); 
+import React from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  InputBase,
+  Button,
+  Container,
+  Box,
+} from "@mui/material";
+import {
+  Search as SearchIcon,
+  GitHub as GitHubIcon,
+  Brightness4 as Brightness4Icon,
+  Language as LanguageIcon,
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
 
-    const validationSchema = Yup.object().shape({
-        loginEmail: Yup.string().required("Email is required").email("Email is invalid"),
-        loginPassword: Yup.string().required("Password is required"),
-    });
+const StyledSearch = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: "#f1f1f1",
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+  padding: "5px 10px",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
 
-    const formik = useFormik({
-        initialValues: {
-            loginEmail: "",
-            loginPassword: "",
-        },
-        validationSchema,
-        onSubmit: async (data, { resetForm }) => {
-            try {
-                resetForm();
-                const user = data1.find(user => user.email === data.loginEmail);
+const MainContainer = styled(Container)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "80vh",
+  textAlign: "center",
+}));
 
-                if (data.loginEmail === "Admin@gmail.com" && data.loginPassword === "sparjan") {
-                    alert("Admin login successful");
-                    adminlogin(); 
-                } else if (user) {
-                    if (user.password === data.loginPassword) {
-                        setAlert({ logsucc: true, loferr: false });
-                        dispatch(login());
-                        Token.setUserEmail(data.loginEmail)
-                        Token.setProfilePic(user.profilePicture)
-                        Token.setUserLogin(true);
-                        navigate("/dashboard");
-                    } else {
-                        setAlert({ logsucc: false, loferr: true });
-                    }
-                } else {
-                    setAlert({ logsucc: false, loferr: true });
-                }
-            } catch (error) {
-                console.error('Error logging in:', error);
-                setAlert({ logsucc: false, loferr: true });
-            }
-        }
-    });
-
-    const adminlogin = () => {
-        navigate("/admin");
-    };
-
-    useEffect(() => {
-        StudentServices.getAllStudents().then((res) =>{ setData1(res.data);console.log("Data",res.data);
-        }).catch(err => console.log(err));
-    }, []);
-
-    // Timer for alerts
-    useEffect(() => {
-        if (alert.logsucc || alert.loferr) {
-            const timer = setTimeout(() => {
-                setAlert({ logsucc: false, loferr: false });
-            }, 2000); // Alert will disappear after 3 seconds
-            return () => clearTimeout(timer); // Cleanup the timer on unmount
-        }
-    }, [alert]);
-
-    return (
-        <Box className="logContainer">
-            {alert.logsucc && <Alert severity="success">Login Successfully</Alert>}
-            {alert.loferr && <Alert severity="error">Invalid user</Alert>}
-            <Row>
-                <Col id="c8">
-                    <form onSubmit={formik.handleSubmit}>
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            name="loginEmail"
-                            id="loginEmail"
-                            onChange={formik.handleChange}
-                            value={formik.values.loginEmail}
-                            error={formik.touched.loginEmail && Boolean(formik.errors.loginEmail)}
-                            helperText={formik.touched.loginEmail && formik.errors.loginEmail}
-                        />
-                            {/* <TextField
-                                label="Password"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                name="loginPassword"
-                                id="loginPassword"
-                                type={showPassword ? 'text' : 'password'}
-                                onChange={formik.handleChange}
-                                value={formik.values.loginPassword}
-                                error={formik.touched.loginPassword && Boolean(formik.errors.loginPassword)}
-                                helperText={formik.touched.loginPassword && formik.errors.loginPassword}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setShowPassword(prev => !prev)}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            /> */}
-                        <PasswordInput
-                label="Password"
-                name="loginPassword"
-                value={formik.values.loginPassword}
-                onChange={formik.handleChange}
-                error={formik.touched.loginPassword && Boolean(formik.errors.loginPassword)}
-                helperText={formik.touched.loginPassword && formik.errors.loginPassword}
-            />
-                        <Grid textAlign={"center"} mt={1}>
-                            <Button type="submit" variant="contained">Submit</Button>
-                        </Grid>
-                        <Grid textAlign={"center"} mt={1}>
-                            <span><Link to={"/"}> Register </Link>your account</span>
-                        </Grid>
-                    </form>
-                </Col>
-                <Col id="c4">
-                    <Images />
-                </Col>
-            </Row>
+const Logo = styled("img")({
+  width: 100,
+  height: 100,
+  marginBottom: 20,
+});
+const Login=()=>{
+    return(
+        <div>
+      <MainContainer>
+        <Logo
+          alt="React logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+        />
+        <Typography variant="h3" fontWeight={600}>
+          React
+        </Typography>
+        <Typography variant="h6" color="textSecondary" gutterBottom>
+          The library for web and native user interfaces
+        </Typography>
+        <Box mt={3}>
+          <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+            Learn React
+          </Button>
+          <Button variant="outlined">API Reference</Button>
         </Box>
-    );
-};
-
+      </MainContainer>        
+      
+      <Box
+      component="footer"
+      sx={{
+        color: "black",
+        py: 4,
+        textAlign: "center",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Create user interfaces from components
+        </Typography>
+        <Typography variant="body1" sx={{ opacity: 0.8, mb: 2 }}>
+          React lets you build user interfaces out of individual pieces called
+          components. Create your own React components like Thumbnail,
+          LikeButton, and Video. Then combine them into entire screens, pages,
+          and apps.
+        </Typography>
+        <Button variant="contained" color="secondary" sx={{ mt: 2 }}>
+          Learn More
+        </Button>
+      </Container>
+      <Typography variant="body2" sx={{ mt: 3, opacity: 0.7 }}>
+        © {new Date().getFullYear()} Your Company. All rights reserved.
+      </Typography>
+    </Box>
+      </div>
+    )
+}
 export default Login;
